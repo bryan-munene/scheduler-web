@@ -1,0 +1,10 @@
+body {
+    margin: 0
+}
+
+.login_section {
+  background: burlywood;
+  width: 50%;
+  height: auto;
+  padding: 50px;
+}
