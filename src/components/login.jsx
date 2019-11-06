@@ -11,7 +11,9 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import { Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import loginUser from '../actions/loginUser';
+import { registerUser } from '../actions/registerUser';
 import { withRouter } from 'react-router-dom';
+import { toastr } from 'react-redux-toastr';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Login = ({ login, history, loginUser }) => {
+const Login = ({ login, register, history, loginUser, registerUser }) => {
   const classes = useStyles();
   const [values, setValues] = React.useState({
     usernameEmail: '',
@@ -61,7 +63,22 @@ const Login = ({ login, history, loginUser }) => {
     loginUser(credentials);
   }
 
+  const processRegister = () => {
+    const userData = {
+      username: values.createUsername,
+      email: values.newEmail,
+      password: values.createPassword,
+    };
+
+    if (values.createPassword !== values.confirmPassword) {
+      toastr.error("Passwords do not match");
+    } else {
+      registerUser(userData);
+    }
+  }
+
   const handleChange = prop => event => {
+    console.log(prop);
     setValues({ ...values, [prop]: event.target.value });
   };
 
@@ -109,7 +126,7 @@ const Login = ({ login, history, loginUser }) => {
             }
           />
         </FormControl>
-        <Button onClick={processLogin}>LOGIN</Button>
+        <Button variant="contained" color="primary" onClick={processLogin}>LOGIN</Button>
       </div>
       <div className={classes.formDiv}>
       <h2 className={classes.header}>New User? Create a new account</h2>
@@ -148,16 +165,17 @@ const Login = ({ login, history, loginUser }) => {
             onChange={handleChange('confirmPassword')}
           />
         </FormControl>
-        <Button>SIGN UP</Button>
+        <Button variant="contained" color="primary" onClick={processRegister}>SIGN UP</Button>
       </div>
     </div>
   );
 }
 
-const mapStateToProps = ({ login }) => ({
+const mapStateToProps = ({ login, register }) => ({
   login,
+  register
 });
 export default connect(
   mapStateToProps,
-  { loginUser },
+  { loginUser, registerUser },
 )(withRouter(Login));

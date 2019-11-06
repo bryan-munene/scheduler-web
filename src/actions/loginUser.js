@@ -20,14 +20,13 @@ const loginUser = credentials => (dispatch) => {
       }
     })
     .catch((errors) => {
-      toastr.error(errors);
-      // const err = JSON.parse(errors.request.response);
-      // dispatch({
-      //   type: LOGIN_ERROR,
-      //   payload: err.errors,
-      // });
-      // const message = err.errors.error[0];
-      // toastr.error('Login Failed', message);
+      const err = JSON.parse(errors.request.response);
+      dispatch({
+        type: LOGIN_ERROR,
+        payload: err.errors,
+      });
+      const message = err.errors.error[0];
+      toastr.error('Login Failed', message);
     });
 };
 
